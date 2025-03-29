@@ -7,7 +7,7 @@ import (
 )
 // getComments retrieves all comments for a given post_id
 
-func getReplies(ctx context.Context, postID, db *pgxpool.Pool, commentID, depthLimit, limit, offset int) ([]Comment, error) {
+func GetReplies(ctx context.Context, db *pgxpool.Pool, postID, commentID, depthLimit, limit, offset int) ([]Comment, error) {
         rows, err := db.Query(ctx, `
                 SELECT c.id, c.post_id, c.parent_id, c.content, c.author_id, cc.depth
                 FROM Comment c
@@ -20,6 +20,7 @@ func getReplies(ctx context.Context, postID, db *pgxpool.Pool, commentID, depthL
                 LIMIT $4 OFFSET $5
         `, commentID, postID, depthLimit, limit, offset)
         if err != nil {
+		log.Printf("%v ", err)
                 return nil, err
         }
         defer rows.Close()

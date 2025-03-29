@@ -26,6 +26,9 @@ func main() {
 	r.HandleFunc("/comments/{postID}", func(w http.ResponseWriter, r *http.Request) {
 		api.HandleGetComments(w, r, database) // Inject DB into handler
 	}).Methods("GET")
+	r.HandleFunc("/comments/{postID}/{commentID}", func(w http.ResponseWriter, r *http.Request) {
+                api.HandleGetComments(w, r, database) // Inject DB into handler
+        }).Methods("GET")
 
 	c := cors.New(cors.Options{
 		AllowedOrigins:   []string{"*"},
@@ -38,4 +41,5 @@ func main() {
 	fmt.Println("Server running on port 8000")
 	log.Fatal(http.ListenAndServe(":8000", handler))
 }
+
 

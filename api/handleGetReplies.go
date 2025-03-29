@@ -5,7 +5,7 @@ import (
 //	"context"
 	"github.com/gorilla/mux"
 	"strconv"
-	"log"
+//	"log"
 	"fmt"
 	"encoding/json"
 	"github.com/jackc/pgx/v5/pgxpool"
@@ -39,7 +39,7 @@ func handleGetReplies(w http.ResponseWriter, r *http.Request, database *pgxpool.
                 offset = o
         }
 
-        replies, err := getReplies(ctx, postID, commentID, depthLimit, limit, offset)
+        replies, err := db.GetReplies(ctx, database,postID, commentID, depthLimit, limit, offset)
         if err != nil {
                 http.Error(w, fmt.Sprintf("Failed to fetch replies: %v", err), http.StatusInternalServerError)
                 return
