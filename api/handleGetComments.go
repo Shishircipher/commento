@@ -2,14 +2,16 @@ package api
 
 import (
 	"net/http"
-	"context"
+//	"context"
 	"github.com/gorilla/mux"
 	"strconv"
 	"log"
+	"fmt"
+	"encoding/json"
 )
 
-func handleGetComments(w http.ResponseWriter, r *http.Request) {
-        ctx := r.Context()
+func HandleGetComments(w http.ResponseWriter, r *http.Request) {
+      //  ctx := r.Context()
         vars := mux.Vars(r)
 
         postID, err := strconv.Atoi(vars["postID"])
@@ -32,6 +34,8 @@ func handleGetComments(w http.ResponseWriter, r *http.Request) {
 
  //       comments, err := getComments(ctx, postID, limit, offset)
  	comments := "hello, i am comments"
+//	log.Println(ctx)
+	log.Println(postID)
         if err != nil {
                 http.Error(w, fmt.Sprintf("Failed to fetch comments: %v", err), http.StatusInternalServerError)
                 return

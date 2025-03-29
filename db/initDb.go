@@ -7,7 +7,7 @@ import (
 	"github.com/jackc/pgx/v5/pgxpool"
 )
 
-var db *pgxpool.Pool
+var Db *pgxpool.Pool
 
 func InitDB() {
         databaseURL := os.Getenv("COMMENTO_DB_URL")
@@ -16,7 +16,7 @@ func InitDB() {
         }
 
         var err error
-        db, err = pgxpool.New(context.Background(), databaseURL)
+	Db, err = pgxpool.New(context.Background(), databaseURL)
         if err != nil {
                 log.Fatalf("Unable to connect to database: %v", err)
         }

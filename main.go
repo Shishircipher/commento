@@ -5,17 +5,19 @@ import (
 	"log"
 //	"database/sql"
 //	"github.com/jackc/pgx"
+	"net/http"
 	"github.com/shishircipher/commento/db"
+	"github.com/shishircipher/commento/api"
 	"github.com/gorilla/mux"
 	"github.com/rs/cors"
 )
 
 func main() {
 	db.InitDB()
-	defer db.Close()
+	defer db.Db.Close()
 
 	r := mux.NewRouter()
-	r.HandleFunc("/comments/{postID}", api.handleGetComments).Methods("GET")
+	r.HandleFunc("/comments/{postID}", api.HandleGetComments).Methods("GET")
 
 	c := cors.New(cors.Options{
 		AllowedOrigins:   []string{"*"},
