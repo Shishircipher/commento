@@ -6,12 +6,14 @@ import (
 	"github.com/jackc/pgx/v5/pgxpool"
 )
 // getComments retrieves all comments for a given post_id
-func GetComments(ctx context.Context, db *pgxpool.Pool, postID int) ([]Comment, error) {
+func GetComments(ctx context.Context, db *pgxpool.Pool, postID, limit, offset int) ([]Comment, error) {
         rows, err := db.Query(ctx, `
                 SELECT id, post_id, parent_id, content, author_id 
                 FROM Comment 
                 WHERE post_id = $1 AND parent_id IS NULL
-        `, postID)
+		ORDER BY id ASC
+                LIMIT $2 OFFSET $3
+        `, postID, limit, offset)
         if err != nil {
 		log.Printf("%v ", err)
                 return nil, err

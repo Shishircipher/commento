@@ -2,7 +2,7 @@ package api
 
 import (
 	"net/http"
-	"context"
+//	"context"
 	"github.com/gorilla/mux"
 	"strconv"
 	"log"
@@ -13,7 +13,7 @@ import (
 )
 
 func HandleGetComments(w http.ResponseWriter, r *http.Request, database *pgxpool.Pool) {
-   //     ctx := r.Context()
+        ctx := r.Context()
         vars := mux.Vars(r)
 
         postID, err := strconv.Atoi(vars["postID"])
@@ -21,25 +21,24 @@ func HandleGetComments(w http.ResponseWriter, r *http.Request, database *pgxpool
                 http.Error(w, "Invalid post ID", http.StatusBadRequest)
                 return
         }
-	ctx := context.Background()
-        comments, err := db.GetComments(ctx, database, postID)
+
+        // Default pagination values
+        limit := 10
+        offset := 0
+
+        // Parse query parameters if provided
+        if l, err := strconv.Atoi(r.URL.Query().Get("limit")); err == nil {
+                limit = l
+        }
+        if o, err := strconv.Atoi(r.URL.Query().Get("offset")); err == nil {
+                  offset = o
+        }
+//	ctx := context.Background()
+        comments, err := db.GetComments(ctx, database, postID, limit, offset)
         if err != nil {
                 http.Error(w, fmt.Sprintf("Error retrieving comments: %v", err), http.StatusInternalServerError)
                 return
         }
-
-        // Default pagination values
-//        limit := 10
-//     offset := 0
-
-        // Parse query parameters if provided
-//        if l, err := strconv.Atoi(r.URL.Query().Get("limit")); err == nil {
-  //              limit = l
-    //    }
-      //  if o, err := strconv.Atoi(r.URL.Query().Get("offset")); err == nil {
-        //        offset = o
-       // }
-
       // comments, err := db.GetComments(ctx, postID, limit, offset)
  //	comments := "hello, i am comments"
 //	log.Println(ctx)
@@ -52,4 +51,3 @@ func HandleGetComments(w http.ResponseWriter, r *http.Request, database *pgxpool
         w.Header().Set("Content-Type", "application/json")
         json.NewEncoder(w).Encode(comments)
 }
-
