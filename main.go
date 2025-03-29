@@ -13,8 +13,9 @@ import (
 )
 
 func main() {
-	db.InitDB()
-	defer db.Db.Close()
+// Initialize the database connection
+	db.InitDb()
+	defer db.CloseDb() // Correctly closing the database
 
 	r := mux.NewRouter()
 	r.HandleFunc("/comments/{postID}", api.HandleGetComments).Methods("GET")
