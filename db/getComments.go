@@ -3,11 +3,11 @@ package db
 import (
 	"context"
 	"log"
-//	"github.com/jackc/pgx/v5/pgxpool"
+	"github.com/jackc/pgx/v5/pgxpool"
 )
 // getComments retrieves all comments for a given post_id
-func GetComments(ctx context.Context, postID int) ([]Comment, error) {
-        rows, err := DB.Query(ctx, `
+func GetComments(ctx context.Context, db *pgxpool.Pool, postID int) ([]Comment, error) {
+        rows, err := db.Query(ctx, `
                 SELECT id, post_id, parent_id, content, author_id 
                 FROM Comment 
                 WHERE post_id = $1 AND parent_id IS NULL

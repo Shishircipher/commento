@@ -5,26 +5,22 @@ import (
 	"os"
 	"context"
 	"github.com/jackc/pgx/v5/pgxpool"
+	"fmt"
 )
 
-// Global database connection pool
-var DB *pgxpool.Pool
-
-func InitDb()  {
+// InitDb initializes and returns a database connection pool.
+func InitDb() (*pgxpool.Pool, error){
         databaseURL := os.Getenv("COMMENTO_DB_URL")
         if databaseURL == "" {
-                log.Fatal("Environment variable COMMENTO_DB_URL is not set")
+               log.Fatal("Environment variable COMMENTO_DB_URL is not set")
+	       return nil, fmt.Errorf("environment variable COMMENTO_DB_URL is not set")
         }
 
-        var err error
-	DB, err = pgxpool.New(context.Background(), databaseURL)
+
+	db, err := pgxpool.New(context.Background(), databaseURL)
         if err != nil {
                 log.Fatalf("Unable to connect to database: %v", err)
+		return nil, fmt.Errorf("unable to connect to database: %w", err)
         }
-}
-// CloseDb closes the database connection
-func CloseDb() {
-	if DB != nil {
-		DB.Close()
-	}
+	return db, nil
 }

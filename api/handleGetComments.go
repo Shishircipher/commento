@@ -8,10 +8,11 @@ import (
 	"log"
 	"fmt"
 	"encoding/json"
+	"github.com/jackc/pgx/v5/pgxpool"
 	"github.com/shishircipher/commento/db"
 )
 
-func HandleGetComments(w http.ResponseWriter, r *http.Request) {
+func HandleGetComments(w http.ResponseWriter, r *http.Request, database *pgxpool.Pool) {
    //     ctx := r.Context()
         vars := mux.Vars(r)
 
@@ -21,7 +22,7 @@ func HandleGetComments(w http.ResponseWriter, r *http.Request) {
                 return
         }
 	ctx := context.Background()
-        comments, err := db.GetComments(ctx, postID)
+        comments, err := db.GetComments(ctx, database, postID)
         if err != nil {
                 http.Error(w, fmt.Sprintf("Error retrieving comments: %v", err), http.StatusInternalServerError)
                 return

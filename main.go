@@ -13,12 +13,19 @@ import (
 )
 
 func main() {
-// Initialize the database connection
-	db.InitDb()
-	defer db.CloseDb() // Correctly closing the database
+
+	// Initialize database
+	database, err := db.InitDb()
+	if err != nil {
+		log.Fatalf("Error initializing database: %v", err)
+	}
+	defer database.Close() // Ensure the connection pool is closed when main exits
+	// Create API router and inject database connection
 
 	r := mux.NewRouter()
-	r.HandleFunc("/comments/{postID}", api.HandleGetComments).Methods("GET")
+	r.HandleFunc("/comments/{postID}", func(w http.ResponseWriter, r *http.Request) {
+		api.HandleGetComments(w, r, database) // Inject DB into handler
+	}).Methods("GET")
 
 	c := cors.New(cors.Options{
 		AllowedOrigins:   []string{"*"},
