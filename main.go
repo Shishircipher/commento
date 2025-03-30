@@ -23,6 +23,9 @@ func main() {
 	// Create API router and inject database connection
 
 	r := mux.NewRouter()
+	r.HandleFunc("/comments", func(w http.ResponseWriter, r *http.Request) {
+                api.HandleInsertComment(w, r, database) // Inject DB into handler
+        }).Methods("POST")
 	r.HandleFunc("/comments/{postID}", func(w http.ResponseWriter, r *http.Request) {
 		api.HandleGetComments(w, r, database) // Inject DB into handler
 	}).Methods("GET")
