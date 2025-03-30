@@ -12,7 +12,7 @@ import (
 	"github.com/shishircipher/commento/db"
 )
 
-func handleGetReplies(w http.ResponseWriter, r *http.Request, database *pgxpool.Pool) {
+func HandleGetReplies(w http.ResponseWriter, r *http.Request, database *pgxpool.Pool) {
         ctx := r.Context()
         vars := mux.Vars(r)
 
@@ -39,7 +39,7 @@ func handleGetReplies(w http.ResponseWriter, r *http.Request, database *pgxpool.
                 offset = o
         }
 
-        replies, err := db.GetReplies(ctx, database,postID, commentID, depthLimit, limit, offset)
+        replies, err := db.GetReplies(ctx, database, postID, commentID, depthLimit, limit, offset)
         if err != nil {
                 http.Error(w, fmt.Sprintf("Failed to fetch replies: %v", err), http.StatusInternalServerError)
                 return

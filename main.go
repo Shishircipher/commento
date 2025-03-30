@@ -30,7 +30,7 @@ func main() {
 		api.HandleGetComments(w, r, database) // Inject DB into handler
 	}).Methods("GET")
 	r.HandleFunc("/comments/{postID}/{commentID}", func(w http.ResponseWriter, r *http.Request) {
-                api.HandleGetComments(w, r, database) // Inject DB into handler
+                api.HandleGetReplies(w, r, database) // Inject DB into handler
         }).Methods("GET")
 
 	c := cors.New(cors.Options{
